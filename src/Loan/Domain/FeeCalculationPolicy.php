@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace PragmaGoTech\Interview\Loan\Domain;
 
-use Brick\Money\Money;
+use Brick\Math\BigDecimal;
 
 interface FeeCalculationPolicy
 {
-    public function calculate(LoanProposal $loanProposal): Money;
+    public function calculate(LoanProposal $loanProposal): BigDecimal;
 }

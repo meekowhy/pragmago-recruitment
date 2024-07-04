@@ -13,9 +13,9 @@ class InMemoryFeeBreakpoints implements FeeBreakpoints
 {
     public function getForLoanProposal(LoanProposal $loanProposal): array
     {
-        $loanCurrencyCode = $loanProposal->money->getCurrency()->getCurrencyCode();
+        $currency = Currency::fromMoney($loanProposal->money);
 
-        return match ([$loanProposal->term, $loanCurrencyCode]) {
+        return match ([$loanProposal->term, $currency]) {
             [Term::OF_12_MONTHS, Currency::PLN->value] => [
                 1000 => 50,
                 2000 => 90,

@@ -4,34 +4,33 @@ declare(strict_types=1);
 
 namespace PragmaGoTech\Interview\Loan\Domain;
 
-use Brick\Money\Money;
+use Brick\Math\BigDecimal;
+use Brick\Math\Exception\DivisionByZeroException;
 use Brick\Math\Exception\MathException;
 use Brick\Math\Exception\NumberFormatException;
-use Brick\Money\Exception\MoneyMismatchException;
-use Brick\Money\Exception\UnknownCurrencyException;
-use Brick\Math\Exception\RoundingNecessaryException;
+use Brick\Math\RoundingMode;
 
 class InterpolationFeeCalculationPolicy implements FeeCalculationPolicy
 {
+    private const int DIVISION_PRECISION = 4;
+    private const RoundingMode DIVISION_ROUNDING = RoundingMode::UP;
+
     public function __construct(
         private FeeBreakpoints $feeBreakpoints
     ) {
     }
 
     /**
+     * @throws DivisionByZeroException
      * @throws MathException
-     * @throws MoneyMismatchException
      * @throws NumberFormatException
-     * @throws RoundingNecessaryException
-     * @throws UnknownCurrencyException
      */
-    public function calculate(LoanProposal $loanProposal): Money
+    public function calculate(LoanProposal $loanProposal): BigDecimal
     {
         $breakpoints = $this->feeBreakpoints->getForLoanProposal($loanProposal);
         ksort($breakpoints);
 
-        $proposedLoanMoney = $loanProposal->money;
-        $proposedLoanCurrency = $proposedLoanMoney->getCurrency();
+        $proposedLoanAmount = $loanProposal->money->getAmount();
 
         $lowerBreakpointLoan = null;
         $lowerBreakpointFee = null;
@@ -40,28 +39,28 @@ class InterpolationFeeCalculationPolicy implements FeeCalculationPolicy
         $upperBreakpointFee = null;
 
         foreach ($breakpoints as $loan => $fee) {
-            if ($proposedLoanMoney->isEqualTo($loan)) {
-                return Money::of($fee, $proposedLoanCurrency);
+            if ($proposedLoanAmount->isEqualTo($loan)) {
+                return BigDecimal::of($fee);
             }
 
-            if ($proposedLoanMoney->isGreaterThan($loan)) {
-                $lowerBreakpointLoan = Money::of($loan, $proposedLoanCurrency);
-                $lowerBreakpointFee = Money::of($fee, $proposedLoanCurrency);
-            } elseif ($proposedLoanMoney->isLessThan($loan)) {
-                $upperBreakpointLoan = Money::of($loan, $proposedLoanCurrency);
-                $upperBreakpointFee = Money::of($fee, $proposedLoanCurrency);
+            if ($proposedLoanAmount->isGreaterThan($loan)) {
+                $lowerBreakpointLoan = BigDecimal::of($loan);
+                $lowerBreakpointFee = BigDecimal::of($fee);
+            } elseif ($proposedLoanAmount->isLessThan($loan)) {
+                $upperBreakpointLoan = BigDecimal::of($loan);
+                $upperBreakpointFee = BigDecimal::of($fee);
                 break;
             }
         }
 
-        if ($lowerBreakpointLoan === null || $upperBreakpointLoan === null) {
+        if (array_filter([$lowerBreakpointFee, $lowerBreakpointFee, $upperBreakpointFee, $upperBreakpointFee, 'is_null'])) {
             throw new \RuntimeException('No fee breakpoint found');
         }
 
-        $proposedLoanDiff = $proposedLoanMoney->minus($lowerBreakpointLoan)->getAmount();
-        $breakpointsLoanDiff = $upperBreakpointLoan->minus($lowerBreakpointLoan)->getAmount();
-        $breakpointsFeeDiff = $upperBreakpointFee->minus($lowerBreakpointFee)->getAmount();
+        $proposedLoanDiff = $proposedLoanAmount->minus($lowerBreakpointLoan);
+        $breakpointsLoanDiff = $upperBreakpointLoan->minus($lowerBreakpointLoan);
+        $breakpointsFeeDiff = $upperBreakpointFee->minus($lowerBreakpointFee);
 
-        return $lowerBreakpointFee->plus($breakpointsFeeDiff->multipliedBy($proposedLoanDiff->dividedBy($breakpointsLoanDiff)));
+        return $lowerBreakpointFee->plus($breakpointsFeeDiff->multipliedBy($proposedLoanDiff->dividedBy($breakpointsLoanDiff, self::DIVISION_PRECISION, self::DIVISION_ROUNDING)));
     }
 }

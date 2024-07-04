@@ -14,6 +14,9 @@ class FeeCalculator
 
     public function calculate(LoanProposal $loanProposal): Money
     {
+        $fee = $this->feeCalculationPolicy->calculate($loanProposal);
+        $fee = $this->feeRoundingPolicy->round($loanProposal, $fee);
 
+        return Money::of($fee, $loanProposal->money->getCurrency());
     }
 }

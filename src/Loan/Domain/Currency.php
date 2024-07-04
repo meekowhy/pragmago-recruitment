@@ -10,4 +10,9 @@ enum Currency: string
 {
     case PLN = 'PLN';
 
+    public static function fromMoney(Money $money): Currency
+    {
+        return Currency::from($money->getCurrency()->getCurrencyCode());
+    }
+
 }
