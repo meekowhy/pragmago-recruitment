@@ -9,5 +9,5 @@ interface FeeBreakpoints
     /**
      * @return array<int, int>
      */
-    public function getForTerm(Term $term): array;
+    public function getForLoanProposal(LoanProposal $loanProposal): array;
 }

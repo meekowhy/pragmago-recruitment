@@ -6,7 +6,7 @@ namespace PragmaGoTech\Interview\Loan\Domain;
 
 use Brick\Money\Money;
 
-interface FeeRoundingPolicy
+interface FeeCalculationPolicy
 {
-    public function round(LoanProposal $loanProposal, Money $fee): Money;
+    public function calculate(LoanProposal $loanProposal): Money;
 }

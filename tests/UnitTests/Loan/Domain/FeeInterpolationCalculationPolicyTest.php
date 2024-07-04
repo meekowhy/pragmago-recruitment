@@ -10,21 +10,21 @@ use PHPUnit\Framework\TestCase;
 use PragmaGoTech\Interview\Loan\Domain\Term;
 use PragmaGoTech\Interview\Loan\Domain\Currency;
 use PragmaGoTech\Interview\Loan\Domain\LoanProposal;
-use PragmaGoTech\Interview\Loan\Domain\FeeInterpolationPolicy;
+use PragmaGoTech\Interview\Loan\Domain\InterpolationFeeCalculationPolicy;
 use PragmaGoTech\Interview\Tests\Support\TestDouble\Loan\Domain\InMemoryFeeBreakpointsStub;
 
-class FeeInterpolationPolicyTest extends TestCase
+class FeeInterpolationCalculationPolicyTest extends TestCase
 {
     /**
      * @dataProvider provideLoanProposals
      */
-    public function testInterpolateFeeGivenProperLoanProposalShouldReturnFee(BigDecimal $expectedFee, LoanProposal $loanProposal): void
+    public function testCalculateGivenProperLoanProposalShouldInterpolateFee(BigDecimal $expectedFee, LoanProposal $loanProposal): void
     {
         $feeBreakpointsStub = new InMemoryFeeBreakpointsStub();
 
-        $SUT = new FeeInterpolationPolicy($feeBreakpointsStub);
+        $SUT = new InterpolationFeeCalculationPolicy($feeBreakpointsStub);
 
-        $fee = $SUT->interpolateFee($loanProposal);
+        $fee = $SUT->calculate($loanProposal);
 
         $this->assertTrue($fee->isEqualTo($expectedFee));
     }
@@ -34,7 +34,7 @@ class FeeInterpolationPolicyTest extends TestCase
         return [
             [BigDecimal::of(50.00), LoanProposal::of(Term::OF_12_MONTHS, Money::of(1000, Currency::PLN->value))],
             [BigDecimal::of(70.00), LoanProposal::of(Term::OF_12_MONTHS, Money::of(1500, Currency::PLN->value))],
-            [BigDecimal::of(402.00), LoanProposal::of(Term::OF_12_MONTHS, Money::of(20000, Currency::PLN->value))],
+            [BigDecimal::of(400.00), LoanProposal::of(Term::OF_12_MONTHS, Money::of(20000, Currency::PLN->value))],
         ];
     }
 }

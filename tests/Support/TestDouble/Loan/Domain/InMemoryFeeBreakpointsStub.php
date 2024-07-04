@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace PragmaGoTech\Interview\Tests\Support\TestDouble\Loan\Domain;
 
+use PragmaGoTech\Interview\Loan\Domain\LoanProposal;
 use PragmaGoTech\Interview\Loan\Domain\Term;
 use PragmaGoTech\Interview\Loan\Domain\FeeBreakpoints;
 
 class InMemoryFeeBreakpointsStub implements FeeBreakpoints
 {
-    public function getForTerm(Term $term): array
+    public function getForLoanProposal(LoanProposal $loanProposal): array
     {
-        return match ($term) {
+        return match ($loanProposal->term) {
             Term::OF_12_MONTHS => [
                 1000 => 50,
                 2000 => 90,

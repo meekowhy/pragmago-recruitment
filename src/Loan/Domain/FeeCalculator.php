@@ -8,7 +8,7 @@ use Brick\Money\Money;
 
 class FeeCalculator
 {
-    public function __construct()
+    public function __construct(private FeeCalculationPolicy $feeCalculationPolicy, private FeeRoundingPolicy $feeRoundingPolicy)
     {
     }
 

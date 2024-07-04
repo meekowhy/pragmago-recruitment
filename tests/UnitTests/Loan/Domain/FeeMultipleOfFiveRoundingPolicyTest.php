@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace PragmaGoTech\Interview\Tests\UnitTests\Loan\Domain;
 
-class FeeRoundingPolicyTest
+use PHPUnit\Framework\TestCase;
+
+class FeeMultipleOfFiveRoundingPolicyTest extends TestCase
 {
+
+
 }

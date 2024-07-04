@@ -14,7 +14,6 @@ use Brick\Math\Exception\RoundingNecessaryException;
 readonly class LoanProposal
 {
     private const int MIN_LOAN_PLN = 1_000;
-
     private const int MAX_LOAN_PLN = 20_000;
 
     private function __construct(
@@ -35,7 +34,7 @@ readonly class LoanProposal
             throw new InvalidArgumentException('Loan proposal out of range');
         }
 
-        if (! $money->getCurrency()->is(Currency::PLN->value)) {
+        if (!$money->getCurrency()->is(Currency::PLN->value)) {
             throw new InvalidArgumentException('Loan proposal invalid currency');
         }
 
