@@ -5,27 +5,25 @@ declare(strict_types=1);
 namespace PragmaGoTech\Interview\Loan\Domain;
 
 use Brick\Math\BigDecimal;
+use Brick\Math\RoundingMode;
 
 class MultipleOfFiveFeeRoundingPolicy implements FeeRoundingPolicy
 {
     private const int MULTIPLIER = 5;
+
     public function round(LoanProposal $loanProposal, BigDecimal $fee): BigDecimal
     {
         $loanProposalValue = $loanProposal->money->getAmount();
         $sum = $loanProposalValue->plus($fee);
 
-//        $sum->remainder()
+        $remainder = $sum->remainder(self::MULTIPLIER);
 
-//        var_dump($sum, $sum->remainder(self::MULTIPLIER)->isZero());die;
-
-//        $sumRounded = $sum->remainder(self::MULTIPLIER)->isZero() ? $fee : $loanProposalValue->dividedBy(self::MULTIPLIER)->plus(1)->multipliedBy(self::MULTIPLIER);
-
-        if ($sum->remainder(self::MULTIPLIER)->isZero()) {
+        if ($remainder->isZero()) {
             return $fee;
         }
 
-        $sumRounded = $loanProposalValue->dividedBy(self::MULTIPLIER)->plus(1)->multipliedBy(self::MULTIPLIER);
+        $roundingAmount = BigDecimal::of(5)->minus($remainder);
 
-        return $sumRounded->minus($loanProposalValue);
+        return $fee->plus($roundingAmount)->toScale(0, RoundingMode::CEILING);
     }
 }

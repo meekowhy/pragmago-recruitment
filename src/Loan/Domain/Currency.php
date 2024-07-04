@@ -12,7 +12,9 @@ enum Currency: string
 
     public static function fromMoney(Money $money): Currency
     {
-        return Currency::from($money->getCurrency()->getCurrencyCode());
-    }
+        $currencyCode = $money->getCurrency()->getCurrencyCode();
 
+        return Currency::tryFrom($money->getCurrency()->getCurrencyCode()) ??
+            throw new \InvalidArgumentException('Unable to create Currency from Money currency: ' . $currencyCode);
+    }
 }

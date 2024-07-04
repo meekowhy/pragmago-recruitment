@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace PragmaGoTech\Interview\Loan\Infrastructure\Adapter;
 
+use PragmaGoTech\Interview\Loan\Domain\Term;
 use PragmaGoTech\Interview\Loan\Domain\Currency;
 use PragmaGoTech\Interview\Loan\Domain\LoanProposal;
-use PragmaGoTech\Interview\Loan\Domain\Term;
 use PragmaGoTech\Interview\Loan\Domain\FeeBreakpoints;
 
 class InMemoryFeeBreakpoints implements FeeBreakpoints
@@ -16,7 +16,7 @@ class InMemoryFeeBreakpoints implements FeeBreakpoints
         $currency = Currency::fromMoney($loanProposal->money);
 
         return match ([$loanProposal->term, $currency]) {
-            [Term::OF_12_MONTHS, Currency::PLN->value] => [
+            [Term::OF_12_MONTHS, Currency::PLN] => [
                 1000 => 50,
                 2000 => 90,
                 3000 => 90,
@@ -38,7 +38,7 @@ class InMemoryFeeBreakpoints implements FeeBreakpoints
                 19000 => 380,
                 20000 => 400,
             ],
-            [Term::OF_24_MONTHS, Currency::PLN->value] => [
+            [Term::OF_24_MONTHS, Currency::PLN] => [
                 1000 => 70,
                 2000 => 100,
                 3000 => 120,

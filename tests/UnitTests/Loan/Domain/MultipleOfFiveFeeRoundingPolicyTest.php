@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace PragmaGoTech\Interview\Tests\UnitTests\Loan\Domain;
 
-use Brick\Math\BigDecimal;
 use Brick\Money\Money;
+use Brick\Math\BigDecimal;
 use PHPUnit\Framework\TestCase;
+use PragmaGoTech\Interview\Loan\Domain\Term;
 use PragmaGoTech\Interview\Loan\Domain\Currency;
 use PragmaGoTech\Interview\Loan\Domain\LoanProposal;
 use PragmaGoTech\Interview\Loan\Domain\MultipleOfFiveFeeRoundingPolicy;
-use PragmaGoTech\Interview\Loan\Domain\Term;
 
 class MultipleOfFiveFeeRoundingPolicyTest extends TestCase
 {
@@ -23,7 +23,7 @@ class MultipleOfFiveFeeRoundingPolicyTest extends TestCase
 
         $roundedFee = $SUT->round($loanProposal, $fee);
 
-        $this->assertTrue($roundedFee->isEqualTo($expectedFee));
+        self::assertTrue($roundedFee->isEqualTo($expectedFee));
     }
 
     public static function provideFees(): array
@@ -32,22 +32,22 @@ class MultipleOfFiveFeeRoundingPolicyTest extends TestCase
             'With loan + fee already multiple of 5' => [
                 BigDecimal::of(15),
                 LoanProposal::of(Term::OF_12_MONTHS, Money::of(1000, Currency::PLN->value)),
-                BigDecimal::of(15)
+                BigDecimal::of(15),
             ],
             'With decimal fee' => [
                 BigDecimal::of(20),
                 LoanProposal::of(Term::OF_12_MONTHS, Money::of(1000, Currency::PLN->value)),
-                BigDecimal::of(15.6675)
+                BigDecimal::of(15.6675),
             ],
             'With decimal loan' => [
                 BigDecimal::of(20),
                 LoanProposal::of(Term::OF_12_MONTHS, Money::of(1000.22, Currency::PLN->value)),
-                BigDecimal::of(15)
+                BigDecimal::of(15),
             ],
             'With decimal loan and decimal fee' => [
                 BigDecimal::of(15),
                 LoanProposal::of(Term::OF_12_MONTHS, Money::of(1000.22, Currency::PLN->value)),
-                BigDecimal::of(14.12)
+                BigDecimal::of(14.12),
             ],
         ];
     }
