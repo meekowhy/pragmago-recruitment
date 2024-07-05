@@ -22,7 +22,7 @@ class MultipleOfFiveFeeRoundingPolicy implements FeeRoundingPolicy
             return $fee;
         }
 
-        $roundingAmount = BigDecimal::of(5)->minus($remainder);
+        $roundingAmount = BigDecimal::of(self::MULTIPLIER)->minus($remainder);
 
         return $fee->plus($roundingAmount)->toScale(0, RoundingMode::CEILING);
     }
