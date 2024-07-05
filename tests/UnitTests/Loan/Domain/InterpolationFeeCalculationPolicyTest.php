@@ -16,7 +16,7 @@ use PragmaGoTech\Interview\Tests\Support\TestDouble\Loan\Domain\InMemoryFeeBreak
 class InterpolationFeeCalculationPolicyTest extends TestCase
 {
     /**
-     * @dataProvider provideLoanProposals
+     * @dataProvider provideDataSets
      */
     public function testCalculateWhenGivenProperLoanProposalShouldInterpolateFee(BigDecimal $expectedFee, LoanProposal $loanProposal): void
     {
@@ -29,7 +29,7 @@ class InterpolationFeeCalculationPolicyTest extends TestCase
         self::assertTrue($fee->isEqualTo($expectedFee));
     }
 
-    public static function provideLoanProposals(): array
+    public static function provideDataSets(): array
     {
         return [
             'With smallest loan amount' => [

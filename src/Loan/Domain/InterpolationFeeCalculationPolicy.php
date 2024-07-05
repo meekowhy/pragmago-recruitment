@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace PragmaGoTech\Interview\Loan\Domain;
 
+use RuntimeException;
 use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
-use Brick\Math\Exception\MathException;
-use Brick\Math\Exception\NumberFormatException;
-use Brick\Math\Exception\DivisionByZeroException;
 
 class InterpolationFeeCalculationPolicy implements FeeCalculationPolicy
 {
@@ -21,11 +19,6 @@ class InterpolationFeeCalculationPolicy implements FeeCalculationPolicy
     ) {
     }
 
-    /**
-     * @throws DivisionByZeroException
-     * @throws MathException
-     * @throws NumberFormatException
-     */
     public function calculate(LoanProposal $loanProposal): BigDecimal
     {
         $breakpoints = $this->feeBreakpoints->getForLoanProposal($loanProposal);
@@ -55,7 +48,7 @@ class InterpolationFeeCalculationPolicy implements FeeCalculationPolicy
         }
 
         if (!($lowerBreakpointLoan && $lowerBreakpointFee && $upperBreakpointFee && $upperBreakpointLoan)) {
-            throw new \RuntimeException('No fee breakpoint found');
+            throw new RuntimeException('No fee breakpoint found');
         }
 
         $proposedLoanDiff = $proposedLoanAmount->minus($lowerBreakpointLoan);

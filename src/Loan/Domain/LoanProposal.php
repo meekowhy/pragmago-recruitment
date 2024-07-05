@@ -6,10 +6,6 @@ namespace PragmaGoTech\Interview\Loan\Domain;
 
 use Brick\Money\Money;
 use InvalidArgumentException;
-use Brick\Math\Exception\MathException;
-use Brick\Math\Exception\NumberFormatException;
-use Brick\Money\Exception\MoneyMismatchException;
-use Brick\Math\Exception\RoundingNecessaryException;
 
 readonly class LoanProposal
 {
@@ -23,12 +19,6 @@ readonly class LoanProposal
     ) {
     }
 
-    /**
-     * @throws RoundingNecessaryException
-     * @throws MoneyMismatchException
-     * @throws MathException
-     * @throws NumberFormatException
-     */
     public static function of(Term $term, Money $money): self
     {
         if ($money->isLessThan(self::MIN_LOAN_PLN) || $money->isGreaterThan(self::MAX_LOAN_PLN)) {

@@ -17,7 +17,7 @@ use PragmaGoTech\Interview\Tests\Support\TestDouble\Loan\Domain\InMemoryFeeBreak
 class FeeCalculatorTest extends TestCase
 {
     /**
-     * @dataProvider provideLoanProposals
+     * @dataProvider provideDataSets
      */
     public function testCalculateWhenGivenLoanProposalShouldReturnInterpolatedAndRoundedFee(Money $expectedFee, LoanProposal $loanProposal): void
     {
@@ -31,7 +31,7 @@ class FeeCalculatorTest extends TestCase
         self::assertTrue($fee->isEqualTo($expectedFee));
     }
 
-    public static function provideLoanProposals(): array
+    public static function provideDataSets(): array
     {
         return [
             'With 24 months term' => [

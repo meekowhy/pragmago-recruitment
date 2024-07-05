@@ -15,7 +15,7 @@ use PragmaGoTech\Interview\Loan\Domain\MultipleOfFiveFeeRoundingPolicy;
 class MultipleOfFiveFeeRoundingPolicyTest extends TestCase
 {
     /**
-     * @dataProvider provideFees
+     * @dataProvider provideDataSets
      */
     public function testRoundGivenProperArgumentsShouldRoundUpFeeSuchThatFeeAndLoanIsExactMultiplierOf5(BigDecimal $expectedFee, LoanProposal $loanProposal, BigDecimal $fee)
     {
@@ -26,7 +26,7 @@ class MultipleOfFiveFeeRoundingPolicyTest extends TestCase
         self::assertTrue($roundedFee->isEqualTo($expectedFee));
     }
 
-    public static function provideFees(): array
+    public static function provideDataSets(): array
     {
         return [
             'With loan + fee already multiple of 5' => [
