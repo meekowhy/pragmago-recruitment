@@ -54,6 +54,10 @@ class InterpolationFeeCalculationPolicy implements FeeCalculationPolicy
             }
         }
 
+        if (!($lowerBreakpointLoan && $lowerBreakpointFee && $upperBreakpointFee && $upperBreakpointLoan)) {
+            throw new \RuntimeException('No fee breakpoint found');
+        }
+
         $proposedLoanDiff = $proposedLoanAmount->minus($lowerBreakpointLoan);
         $breakpointsLoanDiff = $upperBreakpointLoan->minus($lowerBreakpointLoan);
         $breakpointsFeeDiff = $upperBreakpointFee->minus($lowerBreakpointFee);

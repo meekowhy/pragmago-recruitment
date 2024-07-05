@@ -19,9 +19,9 @@ class LoanProposalTest extends TestCase
 
         $SUT = LoanProposal::of($term, $money);
 
-        $this->assertInstanceOf(LoanProposal::class, $SUT);
-        $this->assertSame($term, $SUT->term);
-        $this->assertSame($money, $SUT->money);
+        self::assertInstanceOf(LoanProposal::class, $SUT);
+        self::assertSame($term, $SUT->term);
+        self::assertSame($money, $SUT->money);
     }
 
     public function testOfWhenGivenTooSmallMoneyShouldThrowException(): void
